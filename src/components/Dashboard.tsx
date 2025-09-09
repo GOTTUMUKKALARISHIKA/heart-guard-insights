@@ -1,15 +1,16 @@
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Upload, Heart, Activity, TrendingUp, Users } from "lucide-react";
+import { Upload, Heart, Activity, TrendingUp, Users, UserCheck } from "lucide-react";
 import { FileUpload } from "./FileUpload";
 import { MetricsGrid } from "./MetricsGrid";
 import { RiskVisualization } from "./RiskVisualization";
 import { ModelPerformance } from "./ModelPerformance";
+import { PatientInput } from "./PatientInput";
 
 export const Dashboard = () => {
   const [hasData, setHasData] = useState(false);
-  const [analysisStep, setAnalysisStep] = useState<'upload' | 'analysis' | 'prediction'>('upload');
+  const [analysisStep, setAnalysisStep] = useState<'upload' | 'analysis' | 'prediction' | 'patient'>('upload');
 
   const handleDataUpload = () => {
     setHasData(true);
@@ -31,7 +32,16 @@ export const Dashboard = () => {
                 <p className="text-sm text-muted-foreground">Heart Attack Risk Prediction & Analysis</p>
               </div>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
+              <Button 
+                variant={analysisStep === 'patient' ? 'medical' : 'outline'}
+                onClick={() => setAnalysisStep('patient')}
+                className="gap-2"
+              >
+                <UserCheck className="h-4 w-4" />
+                Patient Risk
+              </Button>
+              <div className="h-6 w-px bg-border" />
               <Button 
                 variant={analysisStep === 'upload' ? 'default' : 'secondary'}
                 onClick={() => setAnalysisStep('upload')}
@@ -104,6 +114,10 @@ export const Dashboard = () => {
           </div>
         )}
 
+        {analysisStep === 'patient' && (
+          <PatientInput onBack={() => setAnalysisStep('upload')} />
+        )}
+        
         {/* Welcome State */}
         {!hasData && analysisStep === 'upload' && (
           <div className="max-w-2xl mx-auto mt-16">
@@ -118,7 +132,12 @@ export const Dashboard = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent className="text-center">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
+                  <div className="flex flex-col items-center p-4 rounded-lg bg-background/60">
+                    <UserCheck className="h-8 w-8 text-primary mb-2" />
+                    <h3 className="font-semibold">Patient Risk</h3>
+                    <p className="text-sm text-muted-foreground">Individual risk assessment</p>
+                  </div>
                   <div className="flex flex-col items-center p-4 rounded-lg bg-background/60">
                     <Upload className="h-8 w-8 text-primary mb-2" />
                     <h3 className="font-semibold">Upload Data</h3>
